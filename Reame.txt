@@ -1,0 +1,21 @@
+Googlemashup WMS and framed JQuery UI
+
+TKC_jquery_gmap-frm_info/
+DERIVED FROM: TKC_jquery_gmap-frm/
+
+This version has:
+-----------------
+Changed styling and definition for info dialog
+
+Bookmarks tool & dialog
+
+Toolbar calls are processed by a case function in the script file  gmap_tkc.js
+Info tool processing included a capture event to override the kmllayer priority problem
+
+**Disabled**Queries are displayed in jQuery Dialog instead of a google-infowindow
+jQuery info-dialog defs moved to layout.js
+
+Looping structure in info query changed to allow selection of only one layer at a time.
+(drilldown disabled due to conflicts between wms and kml searches)
+
+Framed jQuery UI interface with slidable top and bottom panels.

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+	<!-- Web Mapping Mashup - Alaska Trails variant -->
+	<!-- Google Maps API V 3 -->
+	<!-- www.aktrails.org -->
+	<!-- John Koltun -->
+	<!-- Version: 20131101 -->
+	<!-- Copyright John Koltun 2013 -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it">
+
+<head>
+	<title>Alaska Trails Web Mapping</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta author="John Koltun, Geographic Resource Solutions"></meta>
+	<meta description="Google Maps Jquery UI Map"></meta>
+	<meta keywords="google maps jquery  WMS Alaska trails skiing hiking biking walking"></meta>
+	<meta name="language" content="en"></meta>
+				
+	<!-- jQuery-UI, qTip & jQuery-UI.Layout -->
+	<link type="text/css" href="css/smoothness/jquery-ui-1.7.2.custom.css" rel="Stylesheet">
+	<script type="text/javascript" src="js/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.7.2.custom.min.js"></script>
+	<script type="text/javascript" src="js/jquery.qtip-1.0.0-rc3.min.js"></script>
+	<script type="text/javascript" src="js/jquery.layout.js"></script>
+	
+	<!-- JQuery custom setup include scripts -->
+	<link type="text/css" href="css/style.css" rel="Stylesheet"></script>
+	<script type="text/javascript" src="js/layout.js"></script>
+	
+ 	  <style type="text/css">                                                                                                   
+      #map_canvas {                                                                                                           
+        height: 500px;                                                                                                        
+      }                                                                                                                       
+    </style>                                                                                                                 
+
+	<!-- Map Setup include scripts-->
+		<!-- Google Maps 3 doesn't need an API Key except for tracking-->
+	<script type="text/javascript"
+        src="http://www.google.com/jsapi?autoload={'modules':[{name:'maps',version:3,other_params:'sensor=false'}]}"></script>
+
+  <script src="src/map_layers.js" type="text/javascript" ></script>
+  <script src="src/bookmarks.js" type="text/javascript" ></script>
+  <script src="src/gmap_aktrails.js" type="text/javascript" ></script>
+  <script src="src/gmap_measure.js" type="text/javascript" ></script>
+  <script src="https://www.google.com/jsapi"></script>
+	<script src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/keydragzoom/2.0.9/src/keydragzoom.js" type="text/javascript"></script>
+
+	<script type="text/javascript">
+		google.maps.event.addDomListener(window, 'load', initialize);
+  </script>
+
+</head>
+<body>
+	<!-- ui-dialog Query Results-->
+		<div id="query-results" title="Measure Results"> Results(m)
+			<div id="chart-results">
+			</div>
+			<div id="elevation-results">
+			</div>
+			<div id="distance-results">
+			</div>
+		</div>
+	<!-- ui-dialog KML Loadn-->
+		<div id="kml-dialog" title="Load KML/KMz"> Enter KMZ Info:
+			<p><label for="kmlUrl">KML/KMZ URL:</label><input id="kmlUrl" title="Full URL to KML/KMZ file."></p>
+			<p><label for="kmlName">Name for Legend:</label><input id="kmlName" title="Enter simple name for KML/KMZ layer."></p>
+			<p><label for="kmlCategory">Layer Category:</label><select id="kmlCategory" >
+				<option value="trails">Trails</option>
+				<option value="weather">Weather</option>
+				<option value="avalanche">Avalanche</option>
+				<option value="background">Background Layer</option>
+			</select> 
+		</div>
+	<!-- ui-dialog Zoom to Location-->
+		<div id="bookmarks-dialog" title="Zoom To Location"> Select Location:
+		</div>
+
+	<!-- ui-dialog Search with Tabs-->
+		<div id="searchlocation-dialog" title="Search for Location"> Select Location:
+				<div id="locationtabs">  
+						<ul>  
+							<li><a href="#loctabs-1">Regions/Parks</a></li>  
+							<li><a href="#loctabs-2">Lat/Lon</a></li>  
+						</ul>
+						<div id="loctabs-1">
+						</div>
+						<div id="loctabs-2">
+							<form id="frmlatlon">
+								Latitude,Longitude: <input type="text" id="txtlatlon" name="latlon" class="text ui-widget-content ui-corner-all"/> <br>
+								(Decimal degrees. Use "-" for West longitude. ex:62.057,-163.553)
+							</form>							
+						</div>
+					</div>
+		</div>
+	<!-- ui-dialog Splash-Disclaimer -->  
+	<div id="dialog_intro" title="AK Trails Web Mapping Disclaimer">  
+		<h1>Welcome to The Alaska Trails Web Mapper</h1>  
+		<p style="font-size: 1.3em; line-height: 1.5; margin: 1em 0; width: 100%;">
+    <h2>Disclaimer</h2
+    <p>
+        <b>Alaska Trails Web Mapping<o:p> Web Mapping</o:p></b></p>
+    <p>
+        These electronic data have been created or compiled from various sources by AKTrails.org as a visual display of mapping data for your 
+        convenience, and not necessarily with the intent of a particular use of the data 
+        recipient (&quot;Recipient&quot;). These data may 
+        contain errors, may not be current, and may omit important information. These 
+        data are solely representational. <strong>AKTRails.org makes no express or implied 
+        warranties with respect to the character, function, or capabilities of the data, 
+        or the suitability of the data for any particular purpose. </strong>AKTrails is not 
+        liable for any direct or indirect damages suffered related to the use of this 
+        data including, but not limited to, physical injury, death, property damage, 
+        economic loss, or other consequential damages suffered by the Recipient or 
+        others arising from any inadequacies of the digital data or the Recipient&#39;s use 
+        of this data.</p>
+    <p>
+        <strong>No portion of these data shall be considered legal documentation for 
+        parcel descriptions or boundaries, nor shall it be considered legal 
+        documentation for political boundaries. Errors in boundary locations may be 
+        significant. </strong>If the Recipient wishes to acquire precise legal 
+        documentation or verify information found on this website, please contact the 
+        appropriate agency. If the Recipient wishes to locate parcel corners and 
+        property lines, please employ the services of a Registered Land Surveyor.</p>
+		<p>
+			This map uses mapping service connectors to access Google(TM)and public data sources.
+			These mapping services may break or be turned off at any time by the agencies that control them.</p>
+			<p style="font-size: .8em; margin: 1em 0; width: 50%;">
+			Programmed by: John Koltun, Geographic Resource Solutions, Anchorage, Alaska www.grsgis.com</p>	  
+  </div>
+   <div class="ui-layout-north" id="header">
+			<!-- header -->
+			<a href="http://www.aktrails.org" target="_blank">
+				<img style="border-style:none;" src="images/aktrailsheader.jpg" alt="AKtrails" />
+			</a>
+
+		<!-- toolbar header -->
+		<div class="fg-toolbar ui-widget-header ui-corner-all ui-helper-clearfix">
+			
+			<div class="fg-buttonset ui-helper-clearfix">
+				<a href="#" class="fg-button ui-state-default fg-button-icon-solo ui-corner-all" title="Full extent" name="zoomfull" onclick="toggleButton(this)";"><span class="ui-icon ui-icon-image"></span> Full Extent</a>
+			</div>
+			<div class="fg-buttonset fg-buttonset-single">
+				<a href="#" class="fg-button ui-state-default fg-button-icon-solo  ui-corner-left" title="Fixed Zoom In" name="zoominfixed" onclick="toggleButton(this)";"><span class="ui-icon ui-icon-circle-plus"></span> Zoom in</a>
+				<a href="#" class="fg-button ui-state-default fg-button-icon-solo" title="Fixed Zoom Out" name="zoomoutfixed" onclick="toggleButton(this)";"><span class="ui-icon ui-icon-circle-minus"></span> Zoom in</a>
+				<a href="#" class="fg-button ui-state-default fg-button-icon-solo" title="Zoom in" name="zoomindrag" onclick="toggleButton(this)";"><span class="ui-icon ui-icon-zoomin"></span> Zoom in</a>
+				<!--<a href="#" class="fg-button ui-state-default fg-button-icon-solo" title="Zoom out" name="zoomoutdrag" onclick="toggleButton(this)";"><span class="ui-icon ui-icon-zoomout"></span> Zoom out</a> -->
+				<a href="#" class="fg-button ui-state-default fg-button-icon-solo ui-state-active" title="Pan" name="pan"	onclick="toggleButton(this)";"><span class="ui-icon ui-icon-arrow-4"></span> Pan</a>
+				<!--<a href="#" class="fg-button ui-state-default fg-button-icon-solo ui-corner-right" title="Previous View" name="btnprev" onclick="toggleButton(this)";"><span class="ui-icon ui-icon-arrowrefresh-1-w"></span> Zoom out</a>-->
+				<!-- <a href="#" class="fg-button ui-state-default fg-button-icon-solo  ui-corner-right" title="Measure Area" name="polygon" ><span class="ui-icon ui-icon-radio-on"></span> Measure Area</a> -->
+			</div>
+			<div class="fg-buttonset ui-helper-clearfix">
+				<a href="#" class="fg-button ui-state-default ui-priority-primary ui-corner-all" title="Locate a Park or Region" name="btnbookmarks" onclick="toggleButton(this)";">Find A Location</a>
+				<a href="#" class="fg-button ui-state-default fg-button-toggleable ui-priority-primary ui-corner-all" title="Click on map for spot weather forecast." name="btnweather" onclick="toggleButton(this)";">Weather Forecast</a>
+				<a href="#" class="fg-button ui-state-default fg-button-toggleable ui-priority-primary ui-corner-all" title="Add KML/KMZ Layer" name="btnKML" onclick="toggleButton(this)";">Add KML</a>
+			</div>
+				<a href="#" class="fg-button ui-state-default fg-button-toggleable fg-button-icon-solo ui-corner-all" title="Query Layer Info" id="btn_info" name="info" onclick="toggleButton(this)";"><span class="ui-icon ui-icon-info"></span> Get Item Info</a>
+				<a href="#" class="fg-button ui-state-default fg-button-toggleable fg-button-icon-solo ui-corner-all" title="Print Map" id="print_map" name="print" onclick="toggleButton(this)";"><span class="ui-icon ui-icon-print"></span>Print Map</a>
+				<a href="#" class="fg-button ui-state-default fg-button-toggleable fg-button-icon-solo ui-corner-all" title="Measure Line" id="measureline" name="measureline" onclick="toggleButton(this)";"><span class="ui-icon ui-icon-grip-dotted-horizontal"></span> Measure Line</a>
+			<div class="fg-buttonset fg-buttonset-single">
+				<button class="fg-button ui-state-default ui-state-disabled ui-corner-left">Base Map:</button>
+				<button class="fg-button ui-state-default ui-priority-primary" title="Google Street Base Map" onclick="map.setMapTypeId(google.maps.MapTypeId.ROADMAP)";">Google</button>
+				<button class="fg-button ui-state-default ui-priority-primary ui-state-active" title="Google Terrain Map" onclick="map.setMapTypeId(google.maps.MapTypeId.TERRAIN)";">Terrain</button>
+				<button class="fg-button ui-state-default ui-priority-primary" title="Google Satellite Basemap" onclick="map.setMapTypeId(google.maps.MapTypeId.HYBRID)";">Satellite</button>
+				<button class="fg-button ui-state-default ui-priority-primary" title="Satellite Data from SDMI" onclick="map.setMapTypeId('BDL')";">AK Satellite</button>
+				<button class="fg-button ui-state-default ui-priority-primary ui-corner-right" title="USGS Topo Maps from SDMI" onclick="map.setMapTypeId('DRG')";">AK Topos</button>
+			</div>
+		</div>  <!-- End Toolbar -->
+	</div> <!-- End layout-north -->
+	<!-- map -->
+	<div class="ui-layout-center" id="map_canvas">
+	</div>
+	<!-- Legend -->
+	<div class="ui-layout-east" id="right">
+		<div style="padding:5px;">
+				<div id="tabs">  
+					<ul>  
+						<li><a href="#tabs-1">Layer List</a></li>  
+						<li><a href="#tabs-2">Legend</a></li>  
+						<li><a href="#tabs-3">Help</a></li>  
+					</ul>
+
+						<div id="tabs-1" >  
+								<!-- Accordion -->  
+								<h2 class="demoHeaders">Trails Layers</h2>  
+								<div id="accordion"> 
+								<div>  
+									<h3><a href="#">Trails Layers</a></h3>
+									<div>
+													<table id="legend1TABLE" style="fontsize: .8em;" >  
+													  <tbody id="legend1TBODY" style="fontsize: .8em;">
+													  	<tr>
+													  		<td><li class="ui-state-default ui-corner-all" title="Turn Layer On-Off"><span class="ui-icon ui-icon-power"></span></li></td>
+													  		<td><li class="ui-state-default ui-corner-all" title="Layer Query Toggle"><span class="ui-icon ui-icon-info"></span></li></td>
+													  		<td></td>
+													  	</tr>  
+													  </tbody>  
+													</table>  
+									</div>  
+								</div>
+								<div>  
+									<h3><a href="#">Avalanche Layers</a></h3>  
+											<div id="sidebar">  
+													<table id="legend2TABLE">  
+													  <tbody id="legend2TBODY">  
+													  	<tr>
+													  		<td><li class="ui-state-default ui-corner-all" title="Turn Layer On-Off"><span class="ui-icon ui-icon-power"></span></li></td>
+													  		<td><li class="ui-state-default ui-corner-all" title="Layer Query Toggle"><span class="ui-icon ui-icon-info"></span></li></td>
+													  		<td></td>
+													  	</tr>  
+													  </tbody>  
+													</table>  
+												</div>  
+								</div>  
+  
+								<div>  
+									<h3><a href="#">Weather Overlays</a></h3>  
+									<div>
+  												<table id="legend3TABLE">  
+													  <tbody id="legend3TBODY">  
+													  	<tr>
+													  		<td><li class="ui-state-default ui-corner-all" title="Turn Layer On-Off"><span class="ui-icon ui-icon-power"></span></li></td>
+													  		<td><li class="ui-state-default ui-corner-all" title="Layer Query Toggle"><span class="ui-icon ui-icon-info"></span></li></td>
+													  		<td></td>
+													  	</tr>  
+													  </tbody>  
+													</table>  
+									</div>
+								</div>  
+								<div>  
+									<h3><a href="#">Background Overlays</a></h3>  
+									<div>
+  												<table id="legend4TABLE">  
+													  <tbody id="legend4TBODY">  
+													  	<tr>
+													  		<td><li class="ui-state-default ui-corner-all" title="Turn Layer On-Off"><span class="ui-icon ui-icon-power"></span></li></td>
+													  		<td><li class="ui-state-default ui-corner-all" title="Layer Query Toggle"><span class="ui-icon ui-icon-info"></span></li></td>
+													  		<td></td>
+													  	</tr>  
+													  </tbody>
+													</table>  
+									</div>
+								</div>  
+									 
+								</div>  <!-- End Accordion -->
+								Click the Section Name to expand layer list.<br/>
+								Click Checkbox to turn layer on.<br/>
+								Click Layer-Query toggle for WMS attribute review.<br/>
+								Google Bike Directions:
+								<script src="//www.gmodules.com/ig/ifr?url=http://hosting.gmodules.com/ig/gadgets/file/114281111391296844949/driving-directions.xml&amp;up_fromLocation=&amp;up_myLocations=1600%20Amphitheatre%20Pkway%2C%20Mountain%20View%2C%20CA%20(Googleplex)&amp;up_defaultDirectionsType=b&amp;up_autoExpand=&amp;synd=open&amp;w=262&amp;h=69&amp;title=Directions+by+Google+Maps&amp;brand=light&amp;lang=en&amp;country=US&amp;border=%23ffffff%7C0px%2C1px+solid+%2399BB66%7C0px%2C2px+solid+%23AACC66%7C0px%2C2px+solid+%23BBDD66&amp;output=js"></script>
+							</div>  <!-- End Tabs-1 -->
+					<div id="tabs-2"><h3>Map Legend</h3>  
+									<div>
+  												<table id="legendgraphicTABLE">  
+													  <tbody id="legendgraphicTBODY">  
+													  </tbody>
+													</table>  
+									</div>
+					</div> <!-- End Tabs-=2 -->
+						<div id="tabs-3">
+							<div>This map is a google-maps mashup of Alaska trails. It gathers data from various map services and sources into a single interface. <br/>
+														--To view the various map layers,	click on the checkboxes in the Layer List to turn on overlay layers.<br/> 
+													  --To enable attribute review, click the round review button next to the layer then click the Info "i" tool. Only one layer at a time may be selected for for review.<br/>
+													  --Layers from KML sources do not have the review button, these layers do not need Info tool.<br/>
+									      	  --Click on the layer-name to open a new web page for the source organization.<br/>  
+									      	  --Select the map background from the menu at the top of the map. There are a series of Alaska background layers to select from including imagery from the Alaska State Digital Mapping Initiative (SDMI).<br/><br/>
+									      	  Software Credits:<br/>
+									      	 <a href="http://www.grgis.com/" target="_blank">John Koltun, GISP, CF, RPF</a> <br/>
+													 <a href="http://jqueryui.com/" target="_blank">jQuery UI</a><br/>
+													 <a href="http://layout.jquery-dev.net/" target="_blank">jQueryUI.Layout</a><br/>
+													 <a href="http://openlayers.org" target="_blank">Openlayers</a><br/>
+													 <a href="http://craigsworks.com/projects/qtip/" target="_blank">qTip Plugin</a> <br/>														<br/>
+														Data Credits:<br/>
+									      	 <a href="http://www.alaskamapped.org/" target="_blank">SDMI Alaska Mapped</a><br/>
+													 <a href="http://sdms.ak.blm.gov/sdms//" target="_blank">BLM Alaska Region SDMS</a><br/>
+													 <a href="http://www.fs.usda.gov/chugach" target="_blank">Chugach National Forest</a><br/>
+													 <a href="http://www.cnfaic.org" target="_blank">CNF Avalanche Information Center</a><br/>
+													 <a href="http://dnr.alaska.gov/parks" target="_blank">Alaska State Parks</a><br/>
+													 <a href="http://www.aktrails.org/contribute" target="_blank">How can you help too?</a><br/>
+													 <br/><br/>
+														Mouse location and map coordinates are in (WGS84 Lat Lon degrees) 
+													 <br/>
+						</div>
+					</div> <!-- End Tabs-3 -->
+				</div> <!-- End Tabs -->
+		</div>
+	</div>   <!-- End layout-east -->
+	<!-- footer -->
+	<div class="ui-layout-south"  id="footer">
+			<!-- toolbar footer -->
+			<div class="fg-toolbar ui-widget-header ui-corner-all ui-helper-clearfix">
+					<div class="fg-buttonset fg-buttonset-single">
+						<button class="fg-button ui-state-default ui-state-enabled">Coordinate:</button>
+							<button class="fg-button ui-state-default ui-state-enabled"><span id="LatLonBox"></span></button>
+						<!--<div id="LatLonBox" class="hidden">:</div> -->
+					</div>
+					<div id="measure_results" >
+					</div>	
+					<div class="fg-buttonset">
+						<button class="fg-button ui-state-default ui-state-enabled ui-corner-all"><img style="border-style:none; height:24px;" src="images/grs_logo_sml.gif"/></button>
+					</div>
+
+			</div>	
+	</div>
+</body>
+</html>

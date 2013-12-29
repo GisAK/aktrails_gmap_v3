@@ -1,0 +1,52 @@
+//---------------------------------------//
+// Spatial Bookmark Definitions
+//---------------------------------------//
+// Version 20131203
+// ** This version combines all bookmarks into single variable 
+// ** and uses the the "category" tag for defining the search tab
+// ** where the bookmark will be placed.  There must be a tab for    
+// ** every category.  
+// ** Currently, the tab-category equivalancy is set in the .js module
+// ** AKtrails categories: parks, regions
+var gbookmarks = {  
+   "Anchorage Hillside":  
+    {"category": "regions",
+		"zoom": 12,  
+    "lat": 61.12,  
+    "lng": -149.70},
+   "Chugach State Park":  
+    {"category": "parks",
+    "zoom": 9,  
+    "lat": 61.09,  
+    "lng": -149.24},
+    "Kincaid Park":  
+    {"category": "regions",
+		"zoom": 13,  
+    "lat": 61.155494,  
+    "lng": -150.153032},
+   "Turnagain Pass":  
+    {"category": "regions",
+		"zoom": 12,  
+    "lat": 60.79,  
+    "lng": -149.19},
+   "Summit Lake":  
+    {"category": "regions",
+		"zoom": 12,  
+    "lat": 60.63,  
+    "lng": -149.50},
+   "Denali State Park":  
+    {"category": "parks",
+    "zoom": 9,  
+    "lat": 62.76,  
+    "lng": -150.18},
+   "Girdwood Valley":  
+    {"category": "regions",
+		"zoom": 13,  
+    "lat": 60.98,  
+    "lng": -149.10},
+   "Hatcher Pass":  
+    {"category": "regions",
+		"zoom": 13,  
+    "lat": 61.788,  
+    "lng": -149.19}     
+ }; 
